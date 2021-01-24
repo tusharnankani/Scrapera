@@ -9,13 +9,13 @@ from tqdm import tqdm
 
 
 class DuckDuckGoScraper:
-    '''
+    """
     Class for DuckDuckGo Image Scraper.
     Dependencies: Chromedriver
     Args:
         driver_path: str, Path to chromedriver executable file
         chromedriver_proxy: dict, A dictionary containing proxy information for the webdriver
-    '''
+    """
 
     def __init__(self, driver_path, chromedriver_proxy=None):
         if not os.path.isfile(driver_path):
@@ -23,9 +23,9 @@ class DuckDuckGoScraper:
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        chrome_options.add_argument('log-level=3')
+        chrome_options.add_argument("log-level=3")
         if chromedriver_proxy is not None:
-            webdriver.DesiredCapabilities.CHROME['proxy'] = chromedriver_proxy
+            webdriver.DesiredCapabilities.CHROME["proxy"] = chromedriver_proxy
         self.driver = webdriver.Chrome(driver_path, options=chrome_options)
 
         self.proxy = chromedriver_proxy
@@ -33,20 +33,18 @@ class DuckDuckGoScraper:
     def _scrape_images(self, query, num_scrolls, out_path):
 
         # Loading the DuckDuckGo image results page
-        self.driver.get(
-            f"https://duckduckgo.com/?q={query}&iax=images&ia=images")
+        self.driver.get(f"https://duckduckgo.com/?q={query}&iax=images&ia=images")
 
         # Scroll num_scroll times
         for _ in range(num_scrolls):
-            self.driver.execute_script(
-                "window.scrollTo(0,document.body.scrollHeight)")
+            self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(2)
 
         # Parse the html to a BS4 object
-        page = BeautifulSoup(self.driver.page_source, 'lxml')
-        image_tags = page.findAll('img', {'class': 'tile--img__img'})
+        page = BeautifulSoup(self.driver.page_source, "lxml")
+        image_tags = page.findAll("img", {"class": "tile--img__img"})
         # Adding https to avoid conflicts during downloading
-        image_links = ["https:" + i['data-src'] for i in image_tags]
+        image_links = ["https:" + i["data-src"] for i in image_tags]
         print(f"Found {len(image_links)} links")
         print("Beginning download")
 
@@ -57,16 +55,19 @@ class DuckDuckGoScraper:
 
         for i, image_link in tqdm(enumerate(image_links)):
             # Deciding the output path based on given directory
-            image_save_path = out_path + \
-                f"/{query + '_' + str(i)}.jpeg" if out_path else f"/{query + '_' + str(i)}.jpeg"
+            image_save_path = (
+                out_path + f"/{query + '_' + str(i)}.jpeg"
+                if out_path
+                else f"/{query + '_' + str(i)}.jpeg"
+            )
             urllib.request.urlretrieve(image_link, image_save_path)
 
     def scrape(self, query, num_scrolls, out_path):
-        '''
+        """
         query: str, Keywords used for fetching results
         num_scrolls: int, Number of times to fetch more entries
         out_path:  [Optional] str, Path to output directory. If unspecified, current directory will be used
-        '''
-        query = str(query).replace(' ', '+')
+        """
+        query = str(query).replace(" ", "+")
         out_path = out_path if os.path.isdir(out_path) else None
         self._scrape_images(query, num_scrolls, out_path)
