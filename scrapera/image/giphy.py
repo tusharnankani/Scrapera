@@ -2,8 +2,8 @@ import os
 import time
 import urllib.request
 
-from PIL import Image
 from bs4 import BeautifulSoup
+from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from tqdm import tqdm

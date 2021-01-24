@@ -1,11 +1,11 @@
 import os
 import re
 import sqlite3
-from tqdm import tqdm
 import time
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from tqdm import tqdm
 
 
 class AmazonReviewScraper:

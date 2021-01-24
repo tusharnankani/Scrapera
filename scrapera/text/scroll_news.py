@@ -1,8 +1,8 @@
 import os
 import sqlite3
 import time
-
 import urllib.request
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options

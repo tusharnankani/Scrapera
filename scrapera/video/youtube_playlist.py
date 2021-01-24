@@ -1,5 +1,6 @@
-import pytube
 import os
+
+import pytube
 
 
 class PlaylistScraper:

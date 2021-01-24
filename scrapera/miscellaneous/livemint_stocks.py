@@ -1,9 +1,8 @@
 import time
+import urllib.request
 
 import numpy as _np
 import pandas as _pd
-
-import urllib.request
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
