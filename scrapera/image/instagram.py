@@ -43,9 +43,12 @@ class InstagramImageScraper:
         urllib_proxies:  [Optional] dict, Proxy information for urllib requests
         '''
         if urllib_proxies:
-            assert type(urllib_proxies) == dict, "Input to 'urllib_proxies' should be a dictionary"
+            if type(urllib_proxies) != dict:
+                raise AssertionError("Input to 'urllib_proxies' should be a dictionary")
         if out_path:
-            assert os.path.isdir(out_path), "Invalid output directory"
-        assert type(resize) in [list, tuple, set] and len(
-            resize) == 2, "'resize' parameter should be an iterable and should be of the form (new_width, new_height)"
+            if not os.path.isdir(out_path):
+                raise AssertionError("Invalid output directory")
+        if not (type(resize) in [list, tuple, set] and len(
+            resize) == 2):
+            raise AssertionError("'resize' parameter should be an iterable and should be of the form (new_width, new_height)")
         self._extract_post(url, urllib_proxies, out_path, resize)

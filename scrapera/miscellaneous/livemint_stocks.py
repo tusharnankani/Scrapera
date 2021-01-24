@@ -67,7 +67,8 @@ class StocksScraper:
         print("Finished scraping!")
 
     def scrape(self, num_companies, freq="1d"):
-        assert freq in ['1d', '1m', '3m',
-                        '6m','1y'], "Invalid frequency. Available options are ['1d','1m','3m','6m','1y']"
+        if freq not in ['1d', '1m', '3m',
+                        '6m','1y']:
+            raise AssertionError("Invalid frequency. Available options are ['1d','1m','3m','6m','1y']")
 
         self._scrape_all_recent(num_companies, freq)

@@ -20,7 +20,8 @@ class AmazonReviewScraper:
         if out_path is not None and not os.path.isdir(out_path):
             raise NotADirectoryError("Invalid path to output directory")
 
-        assert os.path.isfile(driver_path), "Invalid Chromedriver path received"
+        if not os.path.isfile(driver_path):
+            raise AssertionError("Invalid Chromedriver path received")
 
         self.conn = sqlite3.connect(
             os.path.join(out_path, 'AmazonProductReviews.db') if out_path else 'AmazonProductReviews.db')
@@ -83,8 +84,10 @@ class AmazonReviewScraper:
         num_reviews: int, Number of reviews per product. Default is 10
         '''
         query = str(query).replace(' ', '+')
-        assert num_pages >= 1, f"Number of pages must be greater than 0. Receiver {num_pages}"
-        assert num_reviews >= 1
+        if num_pages < 1:
+            raise AssertionError(f"Number of pages must be greater than 0. Receiver {num_pages}")
+        if num_reviews < 1:
+            raise AssertionError
         if num_reviews % 10 != 0:
             print(f"WARNING: Number of reviews will be the closest multiple of 10 to {num_reviews}"
                   " because of fetching restrictions")

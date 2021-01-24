@@ -10,7 +10,8 @@ class VideoScraper:
     '''
     def __init__(self, out_path=''):
         if out_path != '':
-            assert os.path.isdir(out_path), "Invalid output directory"
+            if not os.path.isdir(out_path):
+                raise AssertionError("Invalid output directory")
         self.out_path = out_path
 
     def download(self, url, resolution=None, proxies=None):

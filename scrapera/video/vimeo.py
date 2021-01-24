@@ -14,7 +14,8 @@ class VimeoScraper:
 
     def __init__(self, out_path=None):
         if out_path is not None:
-            assert os.path.isdir(out_path), "Invalid output directory"
+            if not os.path.isdir(out_path):
+                raise AssertionError("Invalid output directory")
         self.out_path = out_path
 
     def scrape(self, url, quality, proxies=None):

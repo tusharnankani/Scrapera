@@ -19,7 +19,8 @@ class GiphyScraper:
     '''
 
     def __init__(self, driver_path, chromedriver_proxy=None):
-        assert os.path.isfile(driver_path), "Incorrect Chromedriver path received"
+        if not os.path.isfile(driver_path):
+            raise AssertionError("Incorrect Chromedriver path received")
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")

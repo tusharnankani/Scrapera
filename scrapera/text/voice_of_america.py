@@ -19,7 +19,8 @@ class VOAScraper:
     '''
     def __init__(self, driver_path, out_path=None, chromedriver_proxy=None):
 
-        assert os.path.isfile(driver_path), "Invalid Chromedriver path received"
+        if not os.path.isfile(driver_path):
+            raise AssertionError("Invalid Chromedriver path received")
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -86,7 +87,8 @@ class VOAScraper:
         Scraper function for Voice of America News articles
         num_scrolls: int, Number of times to fetch more entries. Default is 1
         '''
-        assert (type(num_scrolls) == int and num_scrolls >= 0), "Number of scrolls cannot be negative"
+        if not (type(num_scrolls) == int and num_scrolls >= 0):
+            raise AssertionError("Number of scrolls cannot be negative")
         all_links = self._get_links(num_scrolls)
         self._get_article_content(all_links)
         self.conn.close()

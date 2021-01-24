@@ -10,7 +10,8 @@ class PlaylistScraper:
     '''
     def __init__(self, out_path=''):
         if out_path != '':
-            assert os.path.isdir(out_path), "Invalid output directory"
+            if not os.path.isdir(out_path):
+                raise AssertionError("Invalid output directory")
         self.out_path = out_path
 
     def download(self, playlist_url, num_urls=-1, resolution=None, proxies=None):
