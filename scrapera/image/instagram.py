@@ -1,7 +1,6 @@
 import json
 import os
 import time
-import urllib
 import urllib.request
 
 from PIL import Image
