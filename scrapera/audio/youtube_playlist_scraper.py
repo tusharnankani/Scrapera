@@ -20,10 +20,9 @@ class PlaylistScraper:
     """
 
     def __init__(self, url, bitrate, out_path):
-        if not (
-            type(bitrate) == int
-            and bitrate in [16, 24, 32, 48, 56, 64, 96, 128, 160, 192, 256, 320]
-        ):
+        if not (type(bitrate) == int and bitrate in [
+                16, 24, 32, 48, 56, 64, 96, 128, 160, 192, 256, 320
+        ]):
             raise AssertionError(
                 "Bitrate must be one of [16,24,32,48,56,64,96,128,160,192,256,320]"
             )

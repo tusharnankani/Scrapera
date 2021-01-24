@@ -33,11 +33,13 @@ class DuckDuckGoScraper:
     def _scrape_images(self, query, num_scrolls, out_path):
 
         # Loading the DuckDuckGo image results page
-        self.driver.get(f"https://duckduckgo.com/?q={query}&iax=images&ia=images")
+        self.driver.get(
+            f"https://duckduckgo.com/?q={query}&iax=images&ia=images")
 
         # Scroll num_scroll times
         for _ in range(num_scrolls):
-            self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+            self.driver.execute_script(
+                "window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(2)
 
         # Parse the html to a BS4 object
@@ -55,11 +57,8 @@ class DuckDuckGoScraper:
 
         for i, image_link in tqdm(enumerate(image_links)):
             # Deciding the output path based on given directory
-            image_save_path = (
-                out_path + f"/{query + '_' + str(i)}.jpeg"
-                if out_path
-                else f"/{query + '_' + str(i)}.jpeg"
-            )
+            image_save_path = (out_path + f"/{query + '_' + str(i)}.jpeg" if
+                               out_path else f"/{query + '_' + str(i)}.jpeg")
             urllib.request.urlretrieve(image_link, image_save_path)
 
     def scrape(self, query, num_scrolls, out_path):

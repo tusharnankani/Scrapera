@@ -25,16 +25,13 @@ class AmazonReviewScraper:
             raise AssertionError("Invalid Chromedriver path received")
 
         self.conn = sqlite3.connect(
-            os.path.join(out_path, "AmazonProductReviews.db")
-            if out_path
-            else "AmazonProductReviews.db"
-        )
+            os.path.join(out_path, "AmazonProductReviews.db"
+                         ) if out_path else "AmazonProductReviews.db")
         self.cursor = self.conn.cursor()
         self.cursor.execute(
             "CREATE TABLE IF NOT EXISTS REVIEWS (ID INTEGER PRIMARY KEY AUTOINCREMENT,"
             "REVIEW TEXT,"
-            "RATING NUMBER)"
-        )
+            "RATING NUMBER)")
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -52,12 +49,9 @@ class AmazonReviewScraper:
             for a_tag in a_tags:
                 href = a_tag.get_attribute("href")
                 flag = True if re.findall(r"s[/]?\?k=", href) != [] else False
-                if (
-                    "customerReviews" not in href
-                    and not flag
-                    and "help" not in href
-                    and "amazon-adsystem" not in href
-                ):
+                if ("customerReviews" not in href and not flag
+                        and "help" not in href
+                        and "amazon-adsystem" not in href):
                     all_links.add(href)
         return all_links
 
@@ -67,7 +61,8 @@ class AmazonReviewScraper:
                 self.driver.get(link)
                 # description = driver.find_element_by_id("productDescription").find_element_by_tag_name('p').text
                 time.sleep(1)
-                self.driver.find_element_by_partial_link_text("See all reviews").click()
+                self.driver.find_element_by_partial_link_text(
+                    "See all reviews").click()
                 for _ in range(num_reviews // 10):
                     for i in range(10):
                         review = self.driver.execute_script(
@@ -110,8 +105,7 @@ class AmazonReviewScraper:
         if num_reviews % 10 != 0:
             print(
                 f"WARNING: Number of reviews will be the closest multiple of 10 to {num_reviews}"
-                " because of fetching restrictions"
-            )
+                " because of fetching restrictions")
         all_links = self._scrape_links(query, num_pages)
         self._scrape_products(all_links, num_reviews)
         self.conn.close()

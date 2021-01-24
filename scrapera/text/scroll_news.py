@@ -34,29 +34,26 @@ class ScrollScraper:
         print(
             "Output file: ",
             os.path.join(out_path, "ScrollScraperArticles.db")
-            if out_path
-            else "ScrollScraperArticles.db",
+            if out_path else "ScrollScraperArticles.db",
         )
 
         self.conn = sqlite3.connect(
-            os.path.join(out_path, "ScrollScraperArticles.db")
-            if out_path
-            else "ScrollScraperArticles.db"
-        )
+            os.path.join(out_path, "ScrollScraperArticles.db"
+                         ) if out_path else "ScrollScraperArticles.db")
         self.cursor = self.conn.cursor()
         self.cursor.execute(
             "CREATE TABLE IF NOT EXISTS ARTICLES (ID INTEGER PRIMARY KEY AUTOINCREMENT,"
             "CONTENT TEXT,"
             "AUTHOR TEXT,"
-            "LINK TEXT)"
-        )
+            "LINK TEXT)")
 
         self.proxy = chromedriver_proxy
 
     def _get_links(self, num_scrolls):
         self.driver.get("https://www.scroll.in/global/")
         for _ in range(num_scrolls):
-            self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+            self.driver.execute_script(
+                "window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(2)
 
         links_list = set()

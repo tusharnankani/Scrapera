@@ -35,7 +35,8 @@ class GiphyScraper:
         self.driver.get(f"https://giphy.com/search/{query}")
 
         for _ in range(num_scrolls):
-            self.driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+            self.driver.execute_script(
+                "window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(2)
 
         links = []
@@ -56,11 +57,9 @@ class GiphyScraper:
         print(f"Found {len(all_links)} GIFs. Starting download")
 
         for index, link in tqdm(enumerate(all_links)):
-            path = (
-                os.path.join(out_path, query.replace("+", "_") + f"{index}")
-                if out_path
-                else f'{query.replace("+", "_")}_{index}'
-            )
+            path = (os.path.join(out_path,
+                                 query.replace("+", "_") + f"{index}")
+                    if out_path else f'{query.replace("+", "_")}_{index}')
             urllib.request.urlretrieve(link, path + ".webp")
             im = Image.open(path + ".webp")
             im.info.pop("background", None)

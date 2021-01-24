@@ -16,7 +16,11 @@ class PlaylistScraper:
                 raise AssertionError("Invalid output directory")
         self.out_path = out_path
 
-    def download(self, playlist_url, num_urls=-1, resolution=None, proxies=None):
+    def download(self,
+                 playlist_url,
+                 num_urls=-1,
+                 resolution=None,
+                 proxies=None):
         """
         Scraper function for downloading videos from a youtube playlist
         Args:
@@ -37,11 +41,13 @@ class PlaylistScraper:
 
             print("-" * 75)
             print("File Details: ")
-            print("Title: ", yt.title, "\nAuthor: ", yt.author, "\nLength: ", yt.length)
+            print("Title: ", yt.title, "\nAuthor: ", yt.author, "\nLength: ",
+                  yt.length)
             print("-" * 75)
 
             if resolution:
-                yt.streams.get_by_resolution(resolution).download(self.out_path)
+                yt.streams.get_by_resolution(resolution).download(
+                    self.out_path)
             else:
                 yt.streams.get_highest_resolution().download(self.out_path)
 

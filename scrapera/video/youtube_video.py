@@ -28,12 +28,14 @@ class VideoScraper:
 
         print("-" * 75)
         print("File Details: ")
-        print("Title: ", yt.title, "\nAuthor: ", yt.author, "\nLength: ", yt.length)
+        print("Title: ", yt.title, "\nAuthor: ", yt.author, "\nLength: ",
+              yt.length)
         print("-" * 75)
 
         if resolution:
             try:
-                yt.streams.get_by_resolution(resolution).download(self.out_path)
+                yt.streams.get_by_resolution(resolution).download(
+                    self.out_path)
             except Exception:
                 raise ValueError(
                     f"{resolution} resolution not available for this video. Select a valid resolution"

@@ -38,7 +38,9 @@ class StocksScraper:
         content = urllib.request.urlopen(req).read()
         bs4_page = BeautifulSoup(content, "lxml")
 
-        anchor_tags = bs4_page.find_all("a", attrs={"class": "anchorhover2"}, href=True)
+        anchor_tags = bs4_page.find_all("a",
+                                        attrs={"class": "anchorhover2"},
+                                        href=True)
         links = ["https://www.livemint.com" + a["href"] for a in anchor_tags]
 
         for link in tqdm(links[:num_comp]):
@@ -51,19 +53,15 @@ class StocksScraper:
                     )
                     self.driver.find_element_by_id(freq).click()
                     data = self.driver.execute_script(
-                        "return Highcharts.charts[0].series[0].yData"
-                    )
+                        "return Highcharts.charts[0].series[0].yData")
                     timestamp = self.driver.execute_script(
-                        "return Highcharts.charts[0].series[0].xData"
-                    )
+                        "return Highcharts.charts[0].series[0].xData")
 
                     if len(data) != 83 and len(timestamp) != 83:
                         data = self.driver.execute_script(
-                            "return Highcharts.charts[1].series[0].yData"
-                        )
+                            "return Highcharts.charts[1].series[0].yData")
                         timestamp = self.driver.execute_script(
-                            "return Highcharts.charts[1].series[0].xData"
-                        )
+                            "return Highcharts.charts[1].series[0].xData")
 
                     if data is not None:
                         print(f"Scraped {len(data)} stocks for {company_name}")

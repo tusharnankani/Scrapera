@@ -8,19 +8,14 @@ from PIL import Image
 
 class InstagramImageScraper:
     def _extract_image(self, json_response, out_path=None, resize=None):
-        name_of_file = (
-            str(json_response["graphql"]["shortcode_media"]["owner"]["username"])
-            + "_"
-            + str(json_response["graphql"]["shortcode_media"]["id"])
-        )
-        img_link = json_response["graphql"]["shortcode_media"]["display_resources"][-1][
-            "src"
-        ]
-        path_to_file = (
-            os.path.join(f"{out_path}", f"{name_of_file}.jpeg")
-            if out_path
-            else f"{name_of_file}.jpeg"
-        )
+        name_of_file = (str(
+            json_response["graphql"]["shortcode_media"]["owner"]["username"]) +
+                        "_" +
+                        str(json_response["graphql"]["shortcode_media"]["id"]))
+        img_link = json_response["graphql"]["shortcode_media"][
+            "display_resources"][-1]["src"]
+        path_to_file = (os.path.join(f"{out_path}", f"{name_of_file}.jpeg")
+                        if out_path else f"{name_of_file}.jpeg")
         start_time = time.time()
         urllib.request.urlretrieve(img_link, path_to_file)
         print(f"Download finished in {(time.time()-start_time):.2f} seconds")
@@ -28,7 +23,11 @@ class InstagramImageScraper:
             image = Image.open(path_to_file)
             image.resize(resize).save(path_to_file)
 
-    def _extract_post(self, url, urllib_proxies=None, out_path=None, resize=None):
+    def _extract_post(self,
+                      url,
+                      urllib_proxies=None,
+                      out_path=None,
+                      resize=None):
         url = f"https://www.instagram.com/p/{url.split('/')[-2]}/?__a=1"
 
         req = urllib.request.Request(url, None, {"User-Agent": "Mozilla/5.0"})
@@ -52,7 +51,8 @@ class InstagramImageScraper:
         """
         if urllib_proxies:
             if type(urllib_proxies) != dict:
-                raise AssertionError("Input to 'urllib_proxies' should be a dictionary")
+                raise AssertionError(
+                    "Input to 'urllib_proxies' should be a dictionary")
         if out_path:
             if not os.path.isdir(out_path):
                 raise AssertionError("Invalid output directory")
