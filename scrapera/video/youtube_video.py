@@ -8,6 +8,7 @@ class VideoScraper:
     Args:
         out_path:  [Optional] str, Path to output directory. If unspecified, current directory will be used
     '''
+
     def __init__(self, out_path=''):
         if out_path != '':
             if not os.path.isdir(out_path):
@@ -26,13 +27,16 @@ class VideoScraper:
 
         print("-"*75)
         print("File Details: ")
-        print("Title: ", yt.title, "\nAuthor: ", yt.author, "\nLength: ", yt.length)
+        print("Title: ", yt.title, "\nAuthor: ",
+              yt.author, "\nLength: ", yt.length)
         print("-" * 75)
 
         if resolution:
             try:
-                yt.streams.get_by_resolution(resolution).download(self.out_path)
+                yt.streams.get_by_resolution(
+                    resolution).download(self.out_path)
             except Exception:
-                raise ValueError(f"{resolution} resolution not available for this video. Select a valid resolution")
+                raise ValueError(
+                    f"{resolution} resolution not available for this video. Select a valid resolution")
         else:
             yt.streams.get_highest_resolution().download(self.out_path)

@@ -18,6 +18,7 @@ class ScrollScraper:
         out_path:  [Optional] str, Path to output directory. If unspecified, current directory will be used
         chromedriver_proxy: dict, A dictionary containing proxy information for the webdriver
     '''
+
     def __init__(self, driver_path, out_path=None, chromedriver_proxy=None):
 
         if not os.path.isfile(driver_path):
@@ -46,7 +47,8 @@ class ScrollScraper:
     def _get_links(self, num_scrolls):
         self.driver.get('https://www.scroll.in/global/')
         for _ in range(num_scrolls):
-            self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            self.driver.execute_script(
+                'window.scrollTo(0,document.body.scrollHeight)')
             time.sleep(2)
 
         links_list = set()
@@ -77,7 +79,8 @@ class ScrollScraper:
                 article_contents.append(p.text)
             full_content = '\n'.join(article_contents)
             if full_content != '':
-                self.cursor.execute("INSERT INTO ARTICLES VALUES (?,?,?,?)", (None, full_content, author, link))
+                self.cursor.execute(
+                    "INSERT INTO ARTICLES VALUES (?,?,?,?)", (None, full_content, author, link))
                 self.conn.commit()
 
     def scrape(self, num_scrolls=1):

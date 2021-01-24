@@ -17,6 +17,7 @@ class VOAScraper:
         out_path:  [Optional] str, Path to output directory. If unspecified, current directory will be used
         chromedriver_proxy: dict, A dictionary containing proxy information for the webdriver
     '''
+
     def __init__(self, driver_path, out_path=None, chromedriver_proxy=None):
 
         if not os.path.isfile(driver_path):
@@ -36,17 +37,18 @@ class VOAScraper:
             os.path.join(out_path, 'VOAArticles.db') if out_path else 'VOAArticles.db')
         self.cursor = self.conn.cursor()
         self.cursor.execute("CREATE TABLE IF NOT EXISTS ARTICLES (ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "HEADING TEXT,"
-                       "CONTENT TEXT,"
-                       "AUTHOR TEXT,"
-                       "LINK TEXT)")
+                            "HEADING TEXT,"
+                            "CONTENT TEXT,"
+                            "AUTHOR TEXT,"
+                            "LINK TEXT)")
         self.proxy = chromedriver_proxy
 
     def _get_links(self, num_scrolls):
         all_links = []
         self.driver.get('https://www.voanews.com/usa')
         for _ in range(num_scrolls):
-            self.driver.execute_script('''document.querySelector("a[rel='next']").click()''')
+            self.driver.execute_script(
+                '''document.querySelector("a[rel='next']").click()''')
             time.sleep(2)
 
         bs4_page = BeautifulSoup(self.driver.page_source, 'lxml')
@@ -70,14 +72,18 @@ class VOAScraper:
                 resp = urllib.request.urlopen(req).read()
 
                 page = BeautifulSoup(resp, 'lxml')
-                title = page.find('h1', {'class': 'page-header__title'}).find('span').text
-                author = page.find('div', {'class': 'page-header__meta-item'}).findAll('span')[-1].text
-                p_tags = page.find('div', {'class': 'article__body'}).find('div').findAll('p')
+                title = page.find(
+                    'h1', {'class': 'page-header__title'}).find('span').text
+                author = page.find(
+                    'div', {'class': 'page-header__meta-item'}).findAll('span')[-1].text
+                p_tags = page.find('div', {'class': 'article__body'}).find(
+                    'div').findAll('p')
 
                 for p in p_tags:
                     p_list.append(p.text)
                 full_content = '\n'.join(p_list)
-                self.cursor.execute("INSERT INTO ARTICLES VALUES (?,?,?,?,?)", (None, title, full_content, author, link))
+                self.cursor.execute(
+                    "INSERT INTO ARTICLES VALUES (?,?,?,?,?)", (None, title, full_content, author, link))
                 self.conn.commit()
             except Exception:
                 continue

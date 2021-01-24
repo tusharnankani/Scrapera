@@ -12,7 +12,8 @@ class InstagramImageScraper:
         name_of_file = str(json_response['graphql']['shortcode_media']['owner']['username']) + '_' + str(
             json_response['graphql']['shortcode_media']['id'])
         img_link = json_response['graphql']['shortcode_media']['display_resources'][-1]['src']
-        path_to_file = os.path.join(f"{out_path}", f"{name_of_file}.jpeg") if out_path else f"{name_of_file}.jpeg"
+        path_to_file = os.path.join(
+            f"{out_path}", f"{name_of_file}.jpeg") if out_path else f"{name_of_file}.jpeg"
         start_time = time.time()
         urllib.request.urlretrieve(img_link, path_to_file)
         print(f"Download finished in {(time.time()-start_time):.2f} seconds")
@@ -44,11 +45,13 @@ class InstagramImageScraper:
         '''
         if urllib_proxies:
             if type(urllib_proxies) != dict:
-                raise AssertionError("Input to 'urllib_proxies' should be a dictionary")
+                raise AssertionError(
+                    "Input to 'urllib_proxies' should be a dictionary")
         if out_path:
             if not os.path.isdir(out_path):
                 raise AssertionError("Invalid output directory")
         if not (type(resize) in [list, tuple, set] and len(
-            resize) == 2):
-            raise AssertionError("'resize' parameter should be an iterable and should be of the form (new_width, new_height)")
+                resize) == 2):
+            raise AssertionError(
+                "'resize' parameter should be an iterable and should be of the form (new_width, new_height)")
         self._extract_post(url, urllib_proxies, out_path, resize)

@@ -16,6 +16,7 @@ class AmazonReviewScraper:
         out_path:  [Optional] str, Path to output directory. If unspecified, current directory will be used
         chromedriver_proxy: [Optional] dict, A dictionary containing proxy information for the webdriver
     '''
+
     def __init__(self, driver_path, out_path=None, chromedriver_proxy=None):
         if out_path is not None and not os.path.isdir(out_path):
             raise NotADirectoryError("Invalid path to output directory")
@@ -27,8 +28,8 @@ class AmazonReviewScraper:
             os.path.join(out_path, 'AmazonProductReviews.db') if out_path else 'AmazonProductReviews.db')
         self.cursor = self.conn.cursor()
         self.cursor.execute("CREATE TABLE IF NOT EXISTS REVIEWS (ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "REVIEW TEXT,"
-                       "RATING NUMBER)")
+                            "REVIEW TEXT,"
+                            "RATING NUMBER)")
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -57,7 +58,8 @@ class AmazonReviewScraper:
                 self.driver.get(link)
                 # description = driver.find_element_by_id("productDescription").find_element_by_tag_name('p').text
                 time.sleep(1)
-                self.driver.find_element_by_partial_link_text('See all reviews').click()
+                self.driver.find_element_by_partial_link_text(
+                    'See all reviews').click()
                 for _ in range(num_reviews // 10):
                     for i in range(10):
                         review = self.driver.execute_script(
@@ -65,10 +67,12 @@ class AmazonReviewScraper:
                         rating = self.driver.execute_script(
                             f'''return document.querySelectorAll("[data-hook='review-star-rating']")[{i}].innerText''')
                         if review != '' and review is not None:
-                            self.cursor.execute("INSERT INTO REVIEWS VALUES (?,?,?)", (None, review, float(rating.split(' ')[0])))
+                            self.cursor.execute(
+                                "INSERT INTO REVIEWS VALUES (?,?,?)", (None, review, float(rating.split(' ')[0])))
                         else:
                             break
-                    self.driver.execute_script(f'''document.getElementsByClassName('a-last')[0].firstElementChild.click()''')
+                    self.driver.execute_script(
+                        f'''document.getElementsByClassName('a-last')[0].firstElementChild.click()''')
                     self.conn.commit()
             except Exception:
                 self.conn.commit()
@@ -85,13 +89,14 @@ class AmazonReviewScraper:
         '''
         query = str(query).replace(' ', '+')
         if num_pages < 1:
-            raise AssertionError(f"Number of pages must be greater than 0. Receiver {num_pages}")
+            raise AssertionError(
+                f"Number of pages must be greater than 0. Receiver {num_pages}")
         if num_reviews < 1:
             raise AssertionError
         if num_reviews % 10 != 0:
             print(f"WARNING: Number of reviews will be the closest multiple of 10 to {num_reviews}"
                   " because of fetching restrictions")
-        all_links = self._scrape_links(query,num_pages)
-        self._scrape_products(all_links,num_reviews)
+        all_links = self._scrape_links(query, num_pages)
+        self._scrape_products(all_links, num_reviews)
         self.conn.close()
         self.driver.close()

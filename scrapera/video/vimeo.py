@@ -29,7 +29,8 @@ class VimeoScraper:
         video_id = url.split('/')[-1]
         quality = quality
         try:
-            req = urllib.request.Request(f'https://player.vimeo.com/video/{video_id}/config?default_to_hd=1')
+            req = urllib.request.Request(
+                f'https://player.vimeo.com/video/{video_id}/config?default_to_hd=1')
             req.add_header('User-Agent',
                            'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17')
             if proxies:

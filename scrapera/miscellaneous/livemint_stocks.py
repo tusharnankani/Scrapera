@@ -24,7 +24,8 @@ class StocksScraper:
     def _scrape_all_recent(self, num_comp, freq="1d"):
         all_data, company_names, timestamp = [], [], []
 
-        req = urllib.request.Request('https://www.livemint.com/market/market-stats/bse-most-active-stocks-by-volume')
+        req = urllib.request.Request(
+            'https://www.livemint.com/market/market-stats/bse-most-active-stocks-by-volume')
         req.add_header('User-Agent',
                        'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17')
 
@@ -36,7 +37,8 @@ class StocksScraper:
         content = urllib.request.urlopen(req).read()
         bs4_page = BeautifulSoup(content, 'lxml')
 
-        anchor_tags = bs4_page.find_all('a', attrs={'class': 'anchorhover2'}, href=True)
+        anchor_tags = bs4_page.find_all(
+            'a', attrs={'class': 'anchorhover2'}, href=True)
         links = ['https://www.livemint.com' + a['href'] for a in anchor_tags]
 
         for link in tqdm(links[:num_comp]):
@@ -47,12 +49,16 @@ class StocksScraper:
                     company_name = self.driver.execute_script(
                         "return document.getElementsByClassName('compName')[0].innerText")
                     self.driver.find_element_by_id(freq).click()
-                    data = self.driver.execute_script('return Highcharts.charts[0].series[0].yData')
-                    timestamp = self.driver.execute_script('return Highcharts.charts[0].series[0].xData')
+                    data = self.driver.execute_script(
+                        'return Highcharts.charts[0].series[0].yData')
+                    timestamp = self.driver.execute_script(
+                        'return Highcharts.charts[0].series[0].xData')
 
                     if len(data) != 83 and len(timestamp) != 83:
-                        data = self.driver.execute_script('return Highcharts.charts[1].series[0].yData')
-                        timestamp = self.driver.execute_script('return Highcharts.charts[1].series[0].xData')
+                        data = self.driver.execute_script(
+                            'return Highcharts.charts[1].series[0].yData')
+                        timestamp = self.driver.execute_script(
+                            'return Highcharts.charts[1].series[0].xData')
 
                     if data is not None:
                         print(f"Scraped {len(data)} stocks for {company_name}")
@@ -68,7 +74,8 @@ class StocksScraper:
 
     def scrape(self, num_companies, freq="1d"):
         if freq not in ['1d', '1m', '3m',
-                        '6m','1y']:
-            raise AssertionError("Invalid frequency. Available options are ['1d','1m','3m','6m','1y']")
+                        '6m', '1y']:
+            raise AssertionError(
+                "Invalid frequency. Available options are ['1d','1m','3m','6m','1y']")
 
         self._scrape_all_recent(num_companies, freq)

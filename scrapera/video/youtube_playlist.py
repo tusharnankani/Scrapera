@@ -8,6 +8,7 @@ class PlaylistScraper:
     Args:
         out_path:  [Optional] str, Path to output directory. If unspecified, current directory will be used
     '''
+
     def __init__(self, out_path=''):
         if out_path != '':
             if not os.path.isdir(out_path):
@@ -33,11 +34,13 @@ class PlaylistScraper:
 
             print("-"*75)
             print("File Details: ")
-            print("Title: ", yt.title, "\nAuthor: ", yt.author, "\nLength: ", yt.length)
+            print("Title: ", yt.title, "\nAuthor: ",
+                  yt.author, "\nLength: ", yt.length)
             print("-" * 75)
 
             if resolution:
-                yt.streams.get_by_resolution(resolution).download(self.out_path)
+                yt.streams.get_by_resolution(
+                    resolution).download(self.out_path)
             else:
                 yt.streams.get_highest_resolution().download(self.out_path)
 
